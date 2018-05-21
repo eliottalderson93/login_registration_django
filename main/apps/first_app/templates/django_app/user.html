@@ -1,0 +1,31 @@
+<html>
+
+<head>
+    <title>Mellon</title>
+    {% load static %}
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'django_app\css\styles.css' %}">
+</head>
+
+<body>
+    <div class='wrapper'>
+        <h3>Welcome {{full_name}}</h3>
+        <p>Your Email: {{email}}</p>
+        <p>Your ID: {{ID}}</p>
+        <p>Account Creation: {{created_at}}</p>
+        {% if messages %} {% for message in messages %}
+        <h6>{{message}}</h6>
+        {% endfor %} {% endif %}
+        {% if request.session.create == True %}
+        <h3 style = "color:darkgreen">Successfully Registered</h3>
+        {% else %}
+        <h3 style = "color:darkgreen">Successfully Logged In</h3>
+        {% endif %}
+        <p>We have no choice now but to brave the long dark of Moria</p>
+        <form action='/users/logout'>
+            <button class='logout' type='submit'>Logout</button>
+        </form>
+    </div>
+</body>
+
+</html>
