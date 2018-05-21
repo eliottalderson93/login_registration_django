@@ -6,7 +6,7 @@ from django.contrib import messages
 import bcrypt
 
 def index(request):
-    if 'initial' in request.session:
+    if 'initial' in request.session: #allows me to do things on initialization
         request.session['initial'] = False
         if request.session['user_id'] != -1: #user is here
             messages.set_level(request,0) #otherwise will ignore add message
@@ -14,11 +14,9 @@ def index(request):
             return redirect('/show/'+str(request.session['user_id'])) #keeps them logged in
         #print(request.session)
     else:
-        request.session['initial'] = True #initialize
-        request.session['user_id'] = -1
+        request.session['initial'] = True #initialize default values for session to avoid checking if they are in later
+        request.session['user_id'] = -1 #on login makes a different user id
         request.session['create'] = False #turns true on successful registration
-    if request.session['initial'] == False:
-        pass
     return render(request, "django_app/code.html")
 
 def login_page(request):
@@ -41,6 +39,7 @@ def login(request):
             return redirect('/users/login_page')
         else: #no errors passed credentials true
             userID = users.objects.get(email = request.POST['email']).id
+            request.session['user_id'] = userID
             return redirect("/users/"+str(userID))            
     else:
         return redirect('/users/login_page')
@@ -81,7 +80,7 @@ def show(request, id): #success page
                     'created_at' : this_user.created_at}
         request.session['first_name'] = this_user.fname
         return render(request,"django_app/user.html", context)
-    else:
+    else: #user is not here
         return redirect('/')
 
 def logout(request):
